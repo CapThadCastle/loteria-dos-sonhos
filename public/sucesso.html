@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loteria do Sonho — Resultado</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container { max-width: 620px; width: 100%; text-align: center; }
+    h1 { font-size: 2rem; color: #f5d76e; margin-bottom: 0.5rem; }
+    .stars { font-size: 1.5rem; letter-spacing: 4px; margin-bottom: 1rem; }
+    .card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .numbers-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .num-ball {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f5d76e, #e8a020);
+      color: #1a1040;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .interpretacao {
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid #f5d76e;
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #c8c0e0;
+      line-height: 1.7;
+      margin-top: 1rem;
+      text-align: left;
+    }
+    .btn-novo {
+      width: 100%;
+      padding: 12px;
+      margin-top: 1.25rem;
+      background: transparent;
+      border: 1px solid rgba(245,215,110,0.4);
+      color: #f5d76e;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .btn-novo:hover { background: rgba(245,215,110,0.08); }
+    .loading { color: #b0a8d0; animation: pulse 1.4s infinite; }
+    .erro { color: #e74c3c; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="stars">✦ ✦ ✦</div>
+  <h1>Loteria do Sonho</h1>
+
+  <div class="card">
+    <p id="status" class="loading">Pagamento confirmado! Interpretando seu sonho...</p>
+    <div id="resultado" style="display:none">
+      <p style="color:#b0a8d0; font-size:0.85rem; margin-bottom:0.5rem;">Seus números para jogar</p>
+      <div class="numbers-row" id="numeros"></div>
+      <div class="interpretacao" id="interpretacao"></div>
+      <button class="btn-novo" onclick="window.location.href='/'">Fazer nova consulta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function carregarResultado() {
+    const params = new URLSearchParams(window.location.search);
+    const paymentId = params.get('payment_id');
+
+    if (!paymentId) {
+      document.getElementById('status').textContent = 'Pagamento não encontrado.';
+      document.getElementById('status').className = 'erro';
+      return;
+    }
+
+    try {
+      const resp = await fetch(`/api/resultado?payment_id=${paymentId}`);
+      const data = await resp.json();
+
+      if (data.erro) throw new Error(data.erro);
+
+      const nums = data.numeros.sort((a, b) => a - b);
+      document.getElementById('numeros').innerHTML =
+        nums.map(n => `<div class="num-ball">${n}</div>`).join('');
+      document.getElementById('interpretacao').textContent = data.interpretacao;
+
+      document.getElementById('status').style.display = 'none';
+      document.getElementById('resultado').style.display = 'block';
+
+    } catch (e) {
+      document.getElementById('status').textContent = 'Erro ao carregar resultado. Entre em contato.';
+      document.getElementById('status').className = 'erro';
+    }
+  }
+
+  carregarResultado();
+</script>
+</body>
+</html>

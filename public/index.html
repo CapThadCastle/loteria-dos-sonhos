@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loteria Dos sonhos</title>
+  <title>Loteria do Sonho</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #0f0c29;
       background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       min-height: 100vh;
       color: #fff;
@@ -18,36 +16,11 @@
       justify-content: center;
       padding: 2rem;
     }
-
-    .container {
-      max-width: 620px;
-      width: 100%;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .header h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #f5d76e;
-      margin-bottom: 0.5rem;
-    }
-
-    .header p {
-      font-size: 1rem;
-      color: #b0a8d0;
-    }
-
-    .stars {
-      font-size: 1.5rem;
-      letter-spacing: 4px;
-      margin-bottom: 0.5rem;
-    }
-
+    .container { max-width: 620px; width: 100%; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: 1px; color: #f5d76e; margin-bottom: 0.5rem; }
+    .header p { font-size: 1rem; color: #b0a8d0; }
+    .stars { font-size: 1.5rem; letter-spacing: 4px; margin-bottom: 0.5rem; }
     .card {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
@@ -56,14 +29,7 @@
       margin-bottom: 1rem;
       backdrop-filter: blur(10px);
     }
-
-    label {
-      font-size: 0.85rem;
-      color: #b0a8d0;
-      display: block;
-      margin-bottom: 6px;
-    }
-
+    label { font-size: 0.85rem; color: #b0a8d0; display: block; margin-bottom: 6px; }
     textarea {
       width: 100%;
       min-height: 120px;
@@ -76,26 +42,10 @@
       font-family: inherit;
       resize: vertical;
     }
-
     textarea::placeholder { color: #6b638a; }
     textarea:focus { outline: none; border-color: #f5d76e; }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 1rem;
-    }
-
-    .field label { margin-bottom: 6px; }
-
-    .preset-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 1rem;
-    }
-
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1rem; }
+    .preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
     .preset-btn {
       font-size: 0.75rem;
       padding: 5px 12px;
@@ -106,11 +56,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
-    .preset-btn:hover {
-      background: rgba(245,215,110,0.15);
-    }
-
+    .preset-btn:hover { background: rgba(245,215,110,0.15); }
     input[type=number] {
       width: 100%;
       padding: 10px 12px;
@@ -121,9 +67,7 @@
       font-size: 0.95rem;
       font-family: inherit;
     }
-
     input[type=number]:focus { outline: none; border-color: #f5d76e; }
-
     .preco-box {
       text-align: center;
       padding: 0.75rem;
@@ -134,7 +78,6 @@
       font-size: 0.9rem;
       color: #f5d76e;
     }
-
     .btn-main {
       width: 100%;
       padding: 14px;
@@ -148,271 +91,73 @@
       transition: opacity 0.2s, transform 0.1s;
       letter-spacing: 0.5px;
     }
-
     .btn-main:hover { opacity: 0.92; }
     .btn-main:active { transform: scale(0.98); }
     .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* TELA DE PAGAMENTO */
-    #tela-pagamento {
-      display: none;
-      text-align: center;
-    }
-
-    .pix-box {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin: 1rem 0;
-    }
-
-    .pix-valor {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #f5d76e;
-      margin-bottom: 0.5rem;
-    }
-
-    .pix-instrucao {
-      font-size: 0.85rem;
-      color: #b0a8d0;
-      margin-bottom: 1rem;
-    }
-
-    .pix-chave {
-      background: rgba(0,0,0,0.3);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.9rem;
-      color: #fff;
-      word-break: break-all;
-      margin-bottom: 0.75rem;
-      border: 1px dashed rgba(255,255,255,0.2);
-    }
-
-    .btn-copiar {
-      padding: 8px 20px;
-      border-radius: 8px;
-      border: 1px solid rgba(245,215,110,0.4);
-      background: transparent;
-      color: #f5d76e;
-      cursor: pointer;
-      font-size: 0.85rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-copiar:hover { background: rgba(245,215,110,0.1); }
-
-    .btn-confirmar {
-      width: 100%;
-      padding: 12px;
-      background: #2ecc71;
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-bottom: 0.75rem;
-    }
-
-    .btn-voltar {
-      background: transparent;
-      border: none;
-      color: #b0a8d0;
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    /* RESULTADO */
-    #tela-resultado { display: none; }
-
-    .loading-txt {
-      text-align: center;
-      color: #b0a8d0;
-      font-size: 0.95rem;
-      animation: pulse 1.4s infinite;
-    }
-
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    .numbers-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin: 1.5rem 0;
-    }
-
-    .num-ball {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #f5d76e, #e8a020);
-      color: #1a1040;
-      font-size: 1.1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(245,215,110,0.3);
-    }
-
-    .interpretacao {
-      background: rgba(255,255,255,0.04);
-      border-left: 3px solid #f5d76e;
-      border-radius: 0 10px 10px 0;
-      padding: 1rem 1.25rem;
-      font-size: 0.9rem;
-      color: #c8c0e0;
-      line-height: 1.7;
-      margin-top: 1rem;
-    }
-
-    .btn-novo {
-      width: 100%;
-      padding: 12px;
-      margin-top: 1.25rem;
-      background: transparent;
-      border: 1px solid rgba(245,215,110,0.4);
-      color: #f5d76e;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .btn-novo:hover { background: rgba(245,215,110,0.08); }
-
-    .aviso {
-      text-align: center;
-      font-size: 0.75rem;
-      color: #6b638a;
-      margin-top: 1.5rem;
-    }
-
-    .erro { color: #e74c3c; font-size: 0.9rem; text-align: center; margin-top: 0.5rem; }
+    .aviso { text-align: center; font-size: 0.75rem; color: #6b638a; margin-top: 1.5rem; }
   </style>
 </head>
 <body>
 <div class="container">
-
   <div class="header">
     <div class="stars">✦ ✦ ✦</div>
-    <h1>Loteria dos Sonhos</h1>
+    <h1>Loteria do Sonho</h1>
     <p>Transforme seu sonho em números para a loteria</p>
   </div>
 
-  <!-- TELA PRINCIPAL -->
-  <div id="tela-principal">
-    <div class="card">
-      <label>Descreva seu sonho com detalhes</label>
-      <textarea id="sonho" placeholder="Ex: Sonhei que estava voando sobre uma cidade iluminada, encontrei minha avó que já faleceu, havia muita água e peixes coloridos..."></textarea>
-    </div>
+  <div class="card">
+    <label>Descreva seu sonho com detalhes</label>
+    <textarea id="sonho" placeholder="Ex: Sonhei que estava voando sobre uma cidade iluminada, encontrei minha avó que já faleceu, havia muita água e peixes coloridos..."></textarea>
+  </div>
 
-    <div class="card">
-      <label>Escolha a loteria</label>
-      <div class="preset-row">
-        <button class="preset-btn" onclick="setPreset(6,60)">Mega-Sena</button>
-        <button class="preset-btn" onclick="setPreset(15,25)">Lotofácil</button>
-        <button class="preset-btn" onclick="setPreset(5,80)">Quina</button>
-        <button class="preset-btn" onclick="setPreset(6,49)">Lotomania</button>
+  <div class="card">
+    <label>Escolha a loteria</label>
+    <div class="preset-row">
+      <button class="preset-btn" onclick="setPreset(6,60)">Mega-Sena</button>
+      <button class="preset-btn" onclick="setPreset(15,25)">Lotofácil</button>
+      <button class="preset-btn" onclick="setPreset(5,80)">Quina</button>
+      <button class="preset-btn" onclick="setPreset(6,49)">Lotomania</button>
+    </div>
+    <div class="row">
+      <div>
+        <label>Qtd. de números</label>
+        <input type="number" id="qtd" value="6" min="1" max="20" />
       </div>
-      <div class="row">
-        <div class="field">
-          <label>Qtd. de números</label>
-          <input type="number" id="qtd" value="6" min="1" max="20" />
-        </div>
-        <div class="field">
-          <label>Faixa (1 a ?)</label>
-          <input type="number" id="faixa" value="60" min="10" max="100" />
-        </div>
+      <div>
+        <label>Faixa (1 a ?)</label>
+        <input type="number" id="faixa" value="60" min="10" max="100" />
       </div>
     </div>
-
-    <div class="preco-box">
-      Consulta avulsa — R$ 5,00 via Pix ou cartão
-    </div>
-
-    <button class="btn-main" onclick="irParaPagamento()">Revelar meus números ✦</button>
-    <p class="aviso">Os números são gerados com base em simbolismo e numerologia. Jogue com responsabilidade.</p>
   </div>
 
-  <!-- TELA PAGAMENTO -->
-  <div id="tela-pagamento" class="card">
-    <h2 style="text-align:center; color:#f5d76e; margin-bottom:0.5rem;">Pagamento</h2>
-    <p style="text-align:center; font-size:0.85rem; color:#b0a8d0; margin-bottom:1rem;">Pague R$5,00 para revelar seus números</p>
+  <div class="preco-box">Consulta avulsa — R$ 5,00 via Pix ou cartão</div>
 
-    <div class="pix-box">
-      <div class="pix-valor">R$ 5,00</div>
-      <div class="pix-instrucao">Chave Pix (copie e cole no seu banco):</div>
-      <div class="pix-chave" id="chave-pix">zodrigo@yahoo.com.br</div>
-      <button class="btn-copiar" onclick="copiarPix()">Copiar chave Pix</button>
-    </div>
-
-    <button class="btn-confirmar" onclick="confirmarPagamento()">Já paguei — revelar meus números</button>
-    <br/>
-    <button class="btn-voltar" onclick="voltarInicio()">Voltar</button>
-    <p id="erro-pagamento" class="erro"></p>
-  </div>
-
-  <!-- TELA RESULTADO -->
-  <div id="tela-resultado" class="card">
-    <p id="loading-txt" class="loading-txt">Interpretando seu sonho...</p>
-    <div id="conteudo-resultado" style="display:none; text-align:center;">
-      <p style="color:#b0a8d0; font-size:0.85rem; margin-bottom:0.5rem;">Seus números para jogar</p>
-      <div class="numbers-row" id="numeros-container"></div>
-      <div class="interpretacao" id="interpretacao-txt"></div>
-      <button class="btn-novo" onclick="novaConsulta()">Fazer nova consulta</button>
-    </div>
-  </div>
-
+  <button class="btn-main" id="btn-pagar" onclick="irParaPagamento()">Revelar meus números ✦</button>
+  <p class="aviso">Os números são gerados com base em simbolismo e numerologia. Jogue com responsabilidade.</p>
 </div>
 
 <script>
-  const CHAVE_PIX = 'zodrigo@yahoo.com.br';
-
   function setPreset(q, f) {
     document.getElementById('qtd').value = q;
     document.getElementById('faixa').value = f;
   }
 
-  function irParaPagamento() {
-    const sonho = document.getElementById('sonho').value.trim();
-    if (!sonho || sonho.length < 15) {
-      alert('Por favor, descreva seu sonho com mais detalhes.');
-      return;
-    }
-    document.getElementById('tela-principal').style.display = 'none';
-    document.getElementById('tela-pagamento').style.display = 'block';
-    document.getElementById('chave-pix').textContent = CHAVE_PIX;
-  }
-
-  function copiarPix() {
-    navigator.clipboard.writeText(CHAVE_PIX);
-    const btn = document.querySelector('.btn-copiar');
-    btn.textContent = 'Copiado!';
-    setTimeout(() => btn.textContent = 'Copiar chave Pix', 2000);
-  }
-
-  function voltarInicio() {
-    document.getElementById('tela-pagamento').style.display = 'none';
-    document.getElementById('tela-principal').style.display = 'block';
-  }
-
-  async function confirmarPagamento() {
-    document.getElementById('tela-pagamento').style.display = 'none';
-    document.getElementById('tela-resultado').style.display = 'block';
-    document.getElementById('loading-txt').style.display = 'block';
-    document.getElementById('conteudo-resultado').style.display = 'none';
-
+  async function irParaPagamento() {
     const sonho = document.getElementById('sonho').value.trim();
     const qtd = parseInt(document.getElementById('qtd').value);
     const faixa = parseInt(document.getElementById('faixa').value);
 
+    if (!sonho || sonho.length < 15) {
+      alert('Por favor, descreva seu sonho com mais detalhes.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-pagar');
+    btn.disabled = true;
+    btn.textContent = 'Gerando pagamento...';
+
     try {
-      const resp = await fetch('/api/interpretar', {
+      const resp = await fetch('/api/criar-pagamento', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sonho, qtd, faixa })
@@ -422,23 +167,13 @@
 
       if (data.erro) throw new Error(data.erro);
 
-      const nums = data.numeros.sort((a, b) => a - b);
-      document.getElementById('numeros-container').innerHTML =
-        nums.map(n => `<div class="num-ball">${n}</div>`).join('');
-      document.getElementById('interpretacao-txt').textContent = data.interpretacao;
-
-      document.getElementById('loading-txt').style.display = 'none';
-      document.getElementById('conteudo-resultado').style.display = 'block';
+      window.location.href = data.sandboxInitPoint;
 
     } catch (e) {
-      document.getElementById('loading-txt').textContent = 'Erro ao interpretar o sonho. Tente novamente.';
+      alert('Erro ao gerar pagamento. Tente novamente.');
+      btn.disabled = false;
+      btn.textContent = 'Revelar meus números ✦';
     }
-  }
-
-  function novaConsulta() {
-    document.getElementById('tela-resultado').style.display = 'none';
-    document.getElementById('tela-principal').style.display = 'block';
-    document.getElementById('sonho').value = '';
   }
 </script>
 </body>
