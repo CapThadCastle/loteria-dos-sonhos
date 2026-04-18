@@ -144,6 +144,6 @@ const dicionario = {
       return res.status(200).json(parsed);
   
     } catch (e) {
-      return res.status(500).json({ erro: 'Erro ao processar o sonho' });
-    }
+      return res.status(500).json({ erro: e.message });
+  }
   }
