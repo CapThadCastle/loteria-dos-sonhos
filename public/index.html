@@ -175,6 +175,61 @@
       btn.textContent = 'Revelar meus números ✦';
     }
   }
+  async function verificarPagamento() {
+    const params = new URLSearchParams(window.location.search);
+    const paymentId = params.get('payment_id');
+    const status = params.get('status');
+
+    if (!paymentId) return;
+
+    if (status === 'pending' || status === 'approved') {
+      const btn = document.getElementById('btn-pagar');
+      btn.disabled = true;
+      btn.textContent = 'Verificando pagamento...';
+
+      let tentativas = 0;
+      const intervalo = setInterval(async () => {
+        tentativas++;
+        try {
+          const resp = await fetch(`/api/resultado?payment_id=${paymentId}`);
+          const data = await resp.json();
+
+          if (data.numeros) {
+            clearInterval(intervalo);
+            const nums = data.numeros.sort((a, b) => a - b);
+            document.querySelector('.container').innerHTML = `
+              <div class="header">
+                <div class="stars">✦ ✦ ✦</div>
+                <h1>Loteria do Sonho</h1>
+                <p>Seus números para jogar</p>
+              </div>
+              <div class="card" style="text-align:center">
+                <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:1rem 0">
+                  ${nums.map(n => `<div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f5d76e,#e8a020);color:#1a1040;font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center">${n}</div>`).join('')}
+                </div>
+                <div style="background:rgba(255,255,255,0.04);border-left:3px solid #f5d76e;border-radius:0 10px 10px 0;padding:1rem;font-size:0.9rem;color:#c8c0e0;line-height:1.7;text-align:left;margin-top:1rem">
+                  ${data.interpretacao}
+                </div>
+                <button class="btn-main" style="margin-top:1rem" onclick="window.location.href='/'">Nova consulta</button>
+              </div>`;
+          } else if (tentativas >= 5) {
+            clearInterval(intervalo);
+            btn.disabled = false;
+            btn.textContent = 'Revelar meus números ✦';
+            alert('Pagamento ainda sendo processado. Tente novamente em instantes.');
+          }
+        } catch(e) {
+          if (tentativas >= 5) {
+            clearInterval(intervalo);
+            btn.disabled = false;
+            btn.textContent = 'Revelar meus números ✦';
+          }
+        }
+      }, 3000);
+    }
+  }
+
+  verificarPagamento();
 </script>
 </body>
 </html>
