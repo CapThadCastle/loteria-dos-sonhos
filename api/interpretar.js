@@ -137,6 +137,7 @@ const dicionario = {
       });
   
       const data = await response.json();
+      if (!data.content) throw new Error(JSON.stringify(data));
       const text = data.content.map(i => i.text || '').join('');
       const clean = text.replace(/```json|```/g, '').trim();
       const parsed = JSON.parse(clean);
