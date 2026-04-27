@@ -95,6 +95,90 @@
     .btn-main:active { transform: scale(0.98); }
     .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
     .aviso { text-align: center; font-size: 0.75rem; color: #6b638a; margin-top: 1.5rem; }
+  .verify-section {
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.5rem;
+    }
+    .verify-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .verify-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f5d76e;
+    }
+    .verify-badge {
+      font-size: 0.7rem;
+      padding: 2px 10px;
+      border-radius: 20px;
+      background: rgba(46,204,113,0.15);
+      color: #2ecc71;
+      border: 1px solid rgba(46,204,113,0.3);
+    }
+    .verify-sub {
+      font-size: 0.82rem;
+      color: #b0a8d0;
+      margin-bottom: 1rem;
+    }
+    .verify-select {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      margin-bottom: 0.75rem;
+    }
+    .verify-label {
+      font-size: 0.82rem;
+      color: #b0a8d0;
+      margin-bottom: 6px;
+    }
+    .verify-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      margin-bottom: 0.75rem;
+    }
+    .verify-input:focus { outline: none; border-color: #f5d76e; }
+    .btn-verify {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid rgba(245,215,110,0.4);
+      color: #f5d76e;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-verify:hover { background: rgba(245,215,110,0.08); }
+    .btn-verify:disabled { opacity: 0.5; cursor: not-allowed; }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.875rem;
+    }
+    .result-label { color: #b0a8d0; }
+    .result-valor { color: #fff; font-weight: 500; }
+    .result-sim { color: #2ecc71; }
+    .result-nao { color: #b0a8d0; }
+    .erro { color: #e74c3c; font-size: 0.85rem; margin-top: 0.5rem; }  
   </style>
 </head>
 <body>
@@ -134,6 +218,47 @@
 
   <button class="btn-main" id="btn-pagar" onclick="irParaPagamento()">Revelar meus números ✦</button>
   <p class="aviso">Os números são gerados com base em simbolismo e numerologia. Jogue com responsabilidade.</p>
+  <div class="verify-section">
+   <div class="verify-header">
+    <span class="verify-title">Seus números já saíram antes?</span>
+    <span class="verify-badge">grátis</span>
+  </div>
+  <p class="verify-sub">Consulte o histórico de sorteios da Caixa</p>
+
+  <select id="verify-loteria" class="verify-select">
+    <option value="megasena">Mega-Sena</option>
+    <option value="lotofacil">Lotofácil</option>
+  </select>
+
+  <p class="verify-label" id="verify-instrucao">Digite os 6 números (separados por vírgula)</p>
+  <input type="text" id="verify-numeros" class="verify-input" placeholder="Ex: 7, 13, 28, 34, 51, 60" />
+
+  <button class="btn-verify" onclick="verificarHistorico()">Verificar histórico</button>
+
+  <div id="verify-resultado" style="display:none; margin-top:1rem">
+    <div class="result-item">
+      <span class="result-label">Combinação exata</span>
+      <span class="result-valor" id="res-exata"></span>
+    </div>
+    <div class="result-item" id="row-quina">
+      <span class="result-label">Quina (5 acertos)</span>
+      <span class="result-valor" id="res-quina"></span>
+    </div>
+    <div class="result-item" id="row-quadra">
+      <span class="result-label">Quadra (4 acertos)</span>
+      <span class="result-valor" id="res-quadra"></span>
+    </div>
+    <div class="result-item">
+      <span class="result-label">Número mais sorteado</span>
+      <span class="result-valor" id="res-frequente"></span>
+    </div>
+    <div class="result-item">
+      <span class="result-label">Último sorteio</span>
+      <span class="result-valor" id="res-ultimo"></span>
+    </div>
+  </div>
+  <p id="verify-erro" class="erro" style="display:none"></p>
+</div>
 <p class="aviso" style="margin-top:0.75rem; color:#b0a8d0; font-size:0.8rem; line-height:1.6">Após o pagamento, aguarde alguns segundos que a tela irá recarregar automaticamente. Caso não atualize, retorne à página inicial. Se o resultado não aparecer em até 5 minutos, envie o comprovante Pix para <strong style="color:#f5d76e">zodrigo@yahoo.com.br</strong> que encaminharemos o resultado.</p>
 </div>
 
@@ -231,6 +356,89 @@
   }
 
   verificarPagamento();
+const verificarSelect = document.getElementById('verify-loteria');
+  verificarSelect.addEventListener('change', function() {
+    const instrucao = document.getElementById('verify-instrucao');
+    instrucao.textContent = this.value === 'megasena'
+      ? 'Digite os 6 números (separados por vírgula)'
+      : 'Digite os 15 números (separados por vírgula)';
+    document.getElementById('verify-resultado').style.display = 'none';
+    document.getElementById('verify-erro').style.display = 'none';
+    document.getElementById('verify-numeros').value = '';
+  });
+
+  async function verificarHistorico() {
+    const loteria = document.getElementById('verify-loteria').value;
+    const input = document.getElementById('verify-numeros').value.trim();
+    const btn = document.querySelector('.btn-verify');
+    const erro = document.getElementById('verify-erro');
+    const resultado = document.getElementById('verify-resultado');
+
+    erro.style.display = 'none';
+    resultado.style.display = 'none';
+
+    const numeros = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    const qtdEsperada = loteria === 'megasena' ? 6 : 15;
+
+    if (numeros.length !== qtdEsperada) {
+      erro.textContent = `Por favor, digite exatamente ${qtdEsperada} números separados por vírgula.`;
+      erro.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Consultando...';
+
+    try {
+      const resp = await fetch('/api/verificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ numeros, loteria })
+      });
+
+      const data = await resp.json();
+      if (data.erro) throw new Error(data.erro);
+
+      document.getElementById('res-exata').innerHTML =
+        data.combinacaoExata
+          ? '<span class="result-sim">Sim, já foi sorteada!</span>'
+          : '<span class="result-nao">Nunca sorteada</span>';
+
+      const rowQuina = document.getElementById('row-quina');
+      const rowQuadra = document.getElementById('row-quadra');
+
+      if (loteria === 'megasena') {
+        rowQuina.style.display = 'flex';
+        rowQuadra.style.display = 'flex';
+        document.getElementById('res-quina').innerHTML =
+          data.quina
+            ? '<span class="result-sim">Sim!</span>'
+            : '<span class="result-nao">Não</span>';
+        document.getElementById('res-quadra').innerHTML =
+          data.quadra
+            ? '<span class="result-sim">Sim!</span>'
+            : '<span class="result-nao">Não</span>';
+      } else {
+        rowQuina.style.display = 'none';
+        rowQuadra.style.display = 'none';
+      }
+
+      document.getElementById('res-frequente').textContent =
+        data.maisFrequente ? `${data.maisFrequente.numero} (${data.maisFrequente.vezes}x)` : '—';
+
+      document.getElementById('res-ultimo').textContent =
+        data.ultimoSorteio.join(', ');
+
+      resultado.style.display = 'block';
+
+    } catch(e) {
+      erro.textContent = 'Erro ao consultar. Tente novamente.';
+      erro.style.display = 'block';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Verificar histórico';
+  }  
 </script>
 </body>
 </html>
