@@ -11,17 +11,15 @@ module.exports = async function handler(req, res) {
 
   try {
     const endpoint = loteria === 'megasena'
-      ? 'https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena'
-      : 'https://servicebus2.caixa.gov.br/portaldeloterias/api/lotofacil';
+      ? 'https://loteriascaixa-api.herokuapp.com/api/megasena/latest'
+      : 'https://loteriascaixa-api.herokuapp.com/api/lotofacil/latest';
 
-    const response = await fetch(endpoint, {
-      headers: { 'Accept': 'application/json' }
-    });
-
+    const response = await fetch(endpoint);
     const ultimo = await response.json();
 
     const numerosUser = numeros.map(Number).sort((a, b) => a - b);
-    const numerosUltimo = ultimo.listaDezenas.map(Number).sort((a, b) => a - b);
+    const numerosUltimo = (ultimo.dezenas || ultimo.listaDezenas)
+      .map(Number).sort((a, b) => a - b);
 
     const acertos = numerosUser.filter(n => numerosUltimo.includes(n)).length;
 
@@ -29,31 +27,14 @@ module.exports = async function handler(req, res) {
     const quina = loteria === 'megasena' ? acertos === 5 : null;
     const quadra = loteria === 'megasena' ? acertos === 4 : null;
 
-    const frequencia = {};
-    numerosUser.forEach(n => { frequencia[n] = 0; });
-
-    if (ultimo.listaResultados) {
-      ultimo.listaResultados.forEach(sorteio => {
-        sorteio.listaDezenas.forEach(d => {
-          const n = Number(d);
-          if (frequencia[n] !== undefined) frequencia[n]++;
-        });
-      });
-    }
-
-    const maisFrequente = Object.entries(frequencia)
-      .sort((a, b) => b[1] - a[1])[0];
-
     return res.status(200).json({
       ultimoSorteio: numerosUltimo,
-      concurso: ultimo.numero,
+      concurso: ultimo.concurso || ultimo.numero,
       combinacaoExata,
       quina,
       quadra,
       acertos,
-      maisFrequente: maisFrequente
-        ? { numero: maisFrequente[0], vezes: maisFrequente[1] }
-        : null
+      maisFrequente: null
     });
 
   } catch (e) {
