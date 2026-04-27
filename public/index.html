@@ -411,13 +411,13 @@ const verificarSelect = document.getElementById('verify-loteria');
         rowQuina.style.display = 'flex';
         rowQuadra.style.display = 'flex';
         document.getElementById('res-quina').innerHTML =
-          data.quina
-            ? '<span class="result-sim">Sim!</span>'
-            : '<span class="result-nao">Não</span>';
+          data.quina > 0
+            ? `<span class="result-sim">${data.quina}x já saiu!</span>`
+            : '<span class="result-nao">Nunca saiu</span>';
         document.getElementById('res-quadra').innerHTML =
-          data.quadra
-            ? '<span class="result-sim">Sim!</span>'
-            : '<span class="result-nao">Não</span>';
+          data.quadra > 0
+            ? `<span class="result-sim">${data.quadra}x já saiu!</span>`
+            : '<span class="result-nao">Nunca saiu</span>';
       } else {
         rowQuina.style.display = 'none';
         rowQuadra.style.display = 'none';
