@@ -146,6 +146,21 @@ RESPONDA APENAS em JSON válido, sem markdown, neste formato:
     const clean = text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
+    try {
+      await fetch(process.env.GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sonhoOriginal: sonho,
+          sonhoCorrigido: parsed.sonhoCorrigido || sonho,
+          numeros: parsed.numeros,
+          interpretacao: parsed.interpretacao
+        })
+      });
+    } catch(err) {
+      console.log('Erro ao salvar na planilha:', err.message);
+    }
+
     return res.status(200).json(parsed);
 
   } catch (e) {
