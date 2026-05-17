@@ -287,6 +287,10 @@
     }
 
     const btn = document.getElementById('btn-pagar');
+    gtag('event', 'clique_revelar_numeros', {
+  'event_category': 'funil',
+  'event_label': 'clicou em revelar numeros'
+});
     btn.disabled = true;
     btn.textContent = 'Gerando pagamento...';
 
@@ -301,6 +305,10 @@
 
       if (data.erro) throw new Error(data.erro);
 
+      gtag('event', 'redirecionado_pagamento', {
+  'event_category': 'funil',
+  'event_label': 'foi para o mercado pago'
+});
       window.location.href = data.initPoint;
 
     } catch (e) {
